@@ -57,6 +57,7 @@ So:
    .venv/bin/python -I tools/improv.py /dev/cu.usbmodem1101 provision
    ```
 5. `./restore.sh <ip>`
+6. **Set the AP password again** in the web UI (Config → WiFi Setup). It lives in `wsec.json`, which isn't backed up, so a reflashed horn's AP has WLED's public default password until you do.
 
 ## Restore
 
