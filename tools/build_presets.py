@@ -27,7 +27,7 @@ PRESETS = {
             sx=60, col=[[0xF6, 0xA8, 0xD4], [0xD4, 0xB4, 0xF4], [0, 0, 0]]),
     4: dict(n="Over the top", fx="Meteor", pal="Unicorn", mi=False, bri=BRI,
             sx=150, ix=150, o1=True, o3=True),
-    5: dict(n="Unicorn power", fx="Glitter", pal="Unicorn", mi=False, bri=255,
+    5: dict(n="Unicorn power", fx="Glitter", pal="Royal", mi=False, bri=255,
             sx=230, ix=255, col=[[0, 0, 0], [0, 0, 0], [255, 255, 255]]),
     6: dict(n="Royal waves", fx="Colorwaves", pal="Royal", mi=True, bri=255,
             sx=200, ix=128),
@@ -96,7 +96,10 @@ if __name__ == "__main__":
     a = ap.parse_args()
     presets = build(a.host)
     out = pathlib.Path(a.out)
-    out.write_text(json.dumps(presets, indent=1) + "\n")
+    # Must be compact: WLED edits presets.json in place (file.cpp writeObjectToFile) by finding
+    # '"<id>":' and brace-counting from the next byte. Whitespace after the colon makes it
+    # measure the old object as 1 byte, orphan its body and corrupt the file on the first UI save.
+    out.write_text(json.dumps(presets, separators=(",", ":")))
     for k, v in presets.items():
         if v:
             s = v.get("seg", [{}])[0]

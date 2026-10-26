@@ -108,13 +108,17 @@ Effects and palettes are chosen **by name** against the device's live `/json/eff
 | 2 | Fairy dust | Twinklefox (80) | Unicorn (200) | Speed 70, twinkle rate 110 |
 | 3 | Pink & lilac breathe | Breathe (2) | \* Color 1 (2) | `#f6a8d4` over `#d4b4f4`, speed 60 |
 | 4 | Over the top | Meteor (76) | Unicorn (200) | Mirror off: up the front, over the fold, down the back. Gradient + smooth, speed 150, trail 150 |
-| 5 | Unicorn power | Glitter (87) | Unicorn (200) | Brightness 255 (limiter caps the current), speed 230, glitter 255 |
+| 5 | Unicorn power | Glitter (87) | Royal (199) | Brightness 255 (limiter caps the current), speed 230, glitter 255 |
 | 6 | Royal waves | Colorwaves (67) | Royal (199) | Mirror on, brightness 255, speed 200 |
 | 7 | Royal fireworks | Fireworks Starburst (89) | Royal (199) | Brightness 255, chance 200, fragments 180 |
 | 10 | Cycle | `{"ps":"1~7~"}` | | Steps 1→7 and wraps. **Only works from a button** (see below) |
 | 11 | Off | `{"on":false}` | | Long-press action |
 
-Presets 1–4 run at brightness 89 (35 %); presets 5–7 at 255. Fire 2012 on the Royal palette (speed 70, spark rate 190, mirror on) was the runner-up if an eighth preset is wanted.
+Presets 1–4 run at brightness 89 (35 %); presets 5–7 at 255.
+
+**`presets.json` must stay compact** (no whitespace). WLED saves a preset by editing the file in place (`file.cpp`, `writeObjectToFile`): it finds `"<id>":` and counts braces from the very next byte. A space after the colon makes it treat the old preset as 1 byte long, leave the old body behind and corrupt the file on the first save from the UI. `build_presets.py` writes compact JSON for this reason; don't hand-edit or pretty-print the file before uploading. Saving in place, adding and deleting presets were tested via `psave`/`pdel`.
+
+**If you change presets in the web UI,** pull them back into the repo with `curl -4 http://unicorn.local/presets.json -o backup/presets.json`. Otherwise `restore.sh` will put the old versions back. Fire 2012 on the Royal palette (speed 70, spark rate 190, mirror on) was the runner-up if an eighth preset is wanted.
 
 **Custom palettes.** WLED 16 custom palettes have no name field, so the UI shows them as custom palettes, not by these names:
 
