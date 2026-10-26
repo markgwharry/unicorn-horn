@@ -1,6 +1,6 @@
 {
   "id": { "name": "Unicorn Horn", "mdns": "unicorn" },
-  "ap": { "ssid": "Unicorn-Horn" },
+  "ap": { "ssid": "Unicorn-Horn", "behav": 1 },
   "def": { "on": true, "ps": 1, "bri": 89 },
   "hw": {
     "led": {

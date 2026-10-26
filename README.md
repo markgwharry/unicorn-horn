@@ -8,7 +8,7 @@ ESP32-C3 (SuperMini-style, native USB) driving 16 × WS2812B up the front of the
 | Chip | ESP32-C3 (QFN32) rev v0.4, 4 MB embedded flash (XMC), USB-Serial/JTAG |
 | MAC | `a0:85:e3:49:f2:30` |
 | Home network | `192.168.1.49` (DHCP) · **http://unicorn.local** · name "Unicorn Horn" |
-| Away from home | Joins nothing → opens AP **`Unicorn-Horn`** → browse to **http://4.3.2.1** |
+| Away from home | Opens AP **`Unicorn-Horn`** (password-protected) → browse to **http://4.3.2.1** |
 
 ## Wiring
 
@@ -81,7 +81,7 @@ The device must already be on the network. Passwords live in `wsec.json` on the 
 | Power-up | On, preset 1 (Over the top), brightness 89 (35 %) |
 | Button 0 | **Type None on GPIO9** (see below) |
 | Button 1 | Pushbutton on GPIO3, pull-up. Short press → preset 10 (cycle 1–7), long press → preset 11 (Off), double press → preset 6 (Unicorn power) |
-| AP SSID | `Unicorn-Horn` (opens when no Wi-Fi connection after boot) |
+| AP | SSID `Unicorn-Horn`, password set by owner. Behaviour **1**: opens whenever there's no Wi-Fi connection, after boot **or** if the connection is lost |
 | Wi-Fi TX power | 8.5 dBm (`txpwr 34`), the build default from `LOLIN_WIFI_FIX`; left unchanged |
 
 `config/cfg_patch.json` is the exact JSON that was POSTed to `/json/cfg`.
@@ -132,7 +132,10 @@ The order is a show: **1–4 is the gentle arc** (power up, breathe, climb, calm
 ## Phone control
 
 - **At home:** open `http://unicorn.local` (or `192.168.1.49`) in Safari, then Share → *Add to Home Screen*. Any WLED app on the same network also works.
-- **Out trick-or-treating:** the horn can't reach home Wi-Fi, so after boot it opens the **`Unicorn-Horn`** AP. Join it from the phone and open **http://4.3.2.1**.
+- **Out trick-or-treating:** about 12 s after the horn loses home Wi-Fi (or after booting with none in range), it opens the **`Unicorn-Horn`** AP. Join it from the phone (stay connected despite iOS's "no internet" warning) and open **http://4.3.2.1**.
+  - The AP is mode 1 rather than WLED's default 0. Mode 0 only opens the AP if the horn never connected since boot, so a horn powered up at home would have **no** AP once out of range until power-cycled.
+  - While a phone is connected, WLED stops scanning for home Wi-Fi so the AP stays stable, retrying only every 5 min (`wled.cpp`). Expect a possible brief blip then.
+  - Tested 2026-10-26 with the AP temporarily forced on (mode 2): the phone joined `Unicorn-Horn` with the new password and controlled presets at 4.3.2.1.
 
 ## Files
 
@@ -149,6 +152,6 @@ The order is a show: **1–4 is the gentle arc** (power up, breathe, climb, calm
 
 ## To do
 
-- [ ] **Set the AP password** in the web UI: Config → WiFi Setup → AP password. Until then it's WLED's default.
+- [x] AP password set (in the web UI; stored only on the device).
 - [ ] Fit the GPIO3 button and test short, double and long press. These are configured but untested because the button isn't wired yet.
 - [ ] Consider an OTA lock or settings PIN if the horn will be on shared networks.
