@@ -67,7 +67,7 @@ So:
 It uploads `backup/palette0.json` and `palette1.json`, then `backup/presets.json`, then `backup/cfg.json` (which makes WLED reboot). It then waits for the device and checks presets, name, mDNS name, LED output, limiter, buttons, boot defaults, AP SSID, both custom palettes and the LED count.
 
 **Tested** on 2026-10-26:
-- **End to end:** erase → flash → Improv → restore, with all checks passing and the device booting into preset 1, on, at 35 %. That run used the original 5-preset set.
+- **End to end:** erase → flash → Improv → restore, with all checks passing and the device booting into preset 1, on, at 35 %. That run used the original 5-preset set and numbering.
 - **After adding presets 6–7 and `palette1.json`:** re-run against the configured device, all checks passing. This exercises every upload and check but not a blank device again.
 
 The device must already be on the network. Passwords live in `wsec.json` on the device, which is neither backed up nor touched by the restore. The repo is public, so the home Wi-Fi SSID is blanked in `backup/cfg.json`; `restore.sh` copies the network block the device is currently using (`nw` from `/json/cfg`, which never includes passwords) into the cfg before uploading it.
@@ -78,9 +78,9 @@ The device must already be on the network. Passwords live in `wsec.json` on the 
 |---|---|
 | LED output | 1 × WS281x (type 22), GPIO10, 16 LEDs, GRB (order 0) |
 | Brightness limiter | On: 500 mA max, 55 mA per LED |
-| Power-up | On, preset 1, brightness 89 (35 %) |
+| Power-up | On, preset 1 (Over the top), brightness 89 (35 %) |
 | Button 0 | **Type None on GPIO9** (see below) |
-| Button 1 | Pushbutton on GPIO3, pull-up. Short press → preset 10 (cycle 1–7), long press → preset 11 (Off), double press → preset 5 |
+| Button 1 | Pushbutton on GPIO3, pull-up. Short press → preset 10 (cycle 1–7), long press → preset 11 (Off), double press → preset 6 (Unicorn power) |
 | AP SSID | `Unicorn-Horn` (opens when no Wi-Fi connection after boot) |
 | Wi-Fi TX power | 8.5 dBm (`txpwr 34`), the build default from `LOLIN_WIFI_FIX`; left unchanged |
 
@@ -104,21 +104,21 @@ Effects and palettes are chosen **by name** against the device's live `/json/eff
 
 | ID | Name | Effect | Palette | Notes |
 |---|---|---|---|---|
-| 1 | Rainbow climb | Palette (65) | Unicorn (200) | Mirror on: rises up both faces together. Speed 120, size 200 |
-| 2 | Fairy dust | Twinklefox (80) | Unicorn (200) | Speed 70, twinkle rate 110 |
-| 3 | Pink & lilac breathe | Breathe (2) | \* Color 1 (2) | `#f6a8d4` over `#d4b4f4`, speed 60 |
-| 4 | Over the top | Meteor (76) | Unicorn (200) | Mirror off: up the front, over the fold, down the back. Gradient + smooth, speed 150, trail 150 |
-| 5 | Unicorn power | Glitter (87) | Royal (199) | Brightness 255 (limiter caps the current), speed 230, glitter 255 |
-| 6 | Royal waves | Colorwaves (67) | Royal (199) | Mirror on, brightness 255, speed 200 |
-| 7 | Royal fireworks | Fireworks Starburst (89) | Royal (199) | Brightness 255, chance 200, fragments 180 |
+| 1 | Over the top | Meteor (76) | Unicorn (200) | *Power up.* Mirror off: up the front, over the fold, down the back. Gradient + smooth, speed 150, trail 150 |
+| 2 | Pink & lilac breathe | Breathe (2) | \* Color 1 (2) | `#f6a8d4` over `#d4b4f4`, speed 60 |
+| 3 | Rainbow climb | Palette (65) | Unicorn (200) | Mirror on: rises up both faces together. Speed 120, size 200 |
+| 4 | Fairy dust | Twinklefox (80) | Unicorn (200) | *Calm down.* Speed 70, twinkle rate 110 |
+| 5 | Royal waves | Colorwaves (67) | Royal (199) | *Energetic power up.* Mirror on, brightness 255, speed 200 |
+| 6 | Unicorn power | Glitter (87) | Royal (199) | *Main part.* Brightness 255 (limiter caps the current), speed 230, glitter 255 |
+| 7 | Royal fireworks | Fireworks Starburst (89) | Royal (199) | *Winding down.* Brightness 255, chance 200, fragments 180 |
 | 10 | Cycle | `{"ps":"1~7~"}` | | Steps 1→7 and wraps. **Only works from a button** (see below) |
 | 11 | Off | `{"on":false}` | | Long-press action |
 
-Presets 1–4 run at brightness 89 (35 %); presets 5–7 at 255.
+The order is a show: **1–4 is the gentle arc** (power up, breathe, climb, calm down) and **5–7 the energetic arc** (power up, main part, wind down). Presets 1–4 run at brightness 89 (35 %); presets 5–7 at 255. Fire 2012 on the Royal palette (speed 70, spark rate 190, mirror on) was the runner-up if an eighth preset is wanted.
 
 **`presets.json` must stay compact** (no whitespace). WLED saves a preset by editing the file in place (`file.cpp`, `writeObjectToFile`): it finds `"<id>":` and counts braces from the very next byte. A space after the colon makes it treat the old preset as 1 byte long, leave the old body behind and corrupt the file on the first save from the UI. `build_presets.py` writes compact JSON for this reason; don't hand-edit or pretty-print the file before uploading. Saving in place, adding and deleting presets were tested via `psave`/`pdel`.
 
-**If you change presets in the web UI,** pull them back into the repo with `curl -4 http://unicorn.local/presets.json -o backup/presets.json`. Otherwise `restore.sh` will put the old versions back. Fire 2012 on the Royal palette (speed 70, spark rate 190, mirror on) was the runner-up if an eighth preset is wanted.
+**If you change presets in the web UI,** pull them back into the repo with `curl -4 http://unicorn.local/presets.json -o backup/presets.json`. Otherwise `restore.sh` will put the old versions back.
 
 **Custom palettes.** WLED 16 custom palettes have no name field, so the UI shows them as custom palettes, not by these names:
 

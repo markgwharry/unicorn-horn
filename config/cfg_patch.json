@@ -15,7 +15,7 @@
       "pull": true,
       "ins": [
         { "type": 0, "pin": [9], "macros": [0, 0, 0] },
-        { "type": 2, "pin": [3], "macros": [10, 11, 5] }
+        { "type": 2, "pin": [3], "macros": [10, 11, 6] }
       ]
     }
   }

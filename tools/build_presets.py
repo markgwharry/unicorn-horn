@@ -17,20 +17,21 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 LEDS = 16
 BRI = 89  # ~35 %
 
-# name -> preset; "fx"/"pal" are names, resolved at build time
+# name -> preset; "fx"/"pal" are names, resolved at build time.
+# Order is the show: gentle arc 1-4 (power up, breathe, climb, calm down), energetic arc 5-7.
 PRESETS = {
-    1: dict(n="Rainbow climb", fx="Palette", pal="Unicorn", mi=True, bri=BRI,
-            sx=120, ix=200, c1=0, o1=True, o2=False, o3=True),
-    2: dict(n="Fairy dust", fx="Twinklefox", pal="Unicorn", mi=False, bri=BRI,
-            sx=70, ix=110),
-    3: dict(n="Pink & lilac breathe", fx="Breathe", pal="* Color 1", mi=False, bri=BRI,
-            sx=60, col=[[0xF6, 0xA8, 0xD4], [0xD4, 0xB4, 0xF4], [0, 0, 0]]),
-    4: dict(n="Over the top", fx="Meteor", pal="Unicorn", mi=False, bri=BRI,
+    1: dict(n="Over the top", fx="Meteor", pal="Unicorn", mi=False, bri=BRI,
             sx=150, ix=150, o1=True, o3=True),
-    5: dict(n="Unicorn power", fx="Glitter", pal="Royal", mi=False, bri=255,
-            sx=230, ix=255, col=[[0, 0, 0], [0, 0, 0], [255, 255, 255]]),
-    6: dict(n="Royal waves", fx="Colorwaves", pal="Royal", mi=True, bri=255,
+    2: dict(n="Pink & lilac breathe", fx="Breathe", pal="* Color 1", mi=False, bri=BRI,
+            sx=60, col=[[0xF6, 0xA8, 0xD4], [0xD4, 0xB4, 0xF4], [0, 0, 0]]),
+    3: dict(n="Rainbow climb", fx="Palette", pal="Unicorn", mi=True, bri=BRI,
+            sx=120, ix=200, c1=0, o1=True, o2=False, o3=True),
+    4: dict(n="Fairy dust", fx="Twinklefox", pal="Unicorn", mi=False, bri=BRI,
+            sx=70, ix=110),
+    5: dict(n="Royal waves", fx="Colorwaves", pal="Royal", mi=True, bri=255,
             sx=200, ix=128),
+    6: dict(n="Unicorn power", fx="Glitter", pal="Royal", mi=False, bri=255,
+            sx=230, ix=255, col=[[0, 0, 0], [0, 0, 0], [255, 255, 255]]),
     7: dict(n="Royal fireworks", fx="Fireworks Starburst", pal="Royal", mi=False, bri=255,
             sx=200, ix=180, col=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]),
 }
