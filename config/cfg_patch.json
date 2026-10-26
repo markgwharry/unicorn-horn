@@ -1,0 +1,22 @@
+{
+  "id": { "name": "Unicorn Horn", "mdns": "unicorn" },
+  "ap": { "ssid": "Unicorn-Horn" },
+  "def": { "on": true, "ps": 1, "bri": 89 },
+  "hw": {
+    "led": {
+      "total": 16,
+      "maxpwr": 500,
+      "ins": [
+        { "start": 0, "len": 16, "pin": [10], "order": 0, "rev": false, "skip": 0,
+          "type": 22, "ref": false, "rgbwm": 0, "freq": 0, "maxpwr": 500, "ledma": 55, "drv": 0, "text": "" }
+      ]
+    },
+    "btn": {
+      "pull": true,
+      "ins": [
+        { "type": 0, "pin": [9], "macros": [0, 0, 0] },
+        { "type": 2, "pin": [3], "macros": [10, 11, 5] }
+      ]
+    }
+  }
+}

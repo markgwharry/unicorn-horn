@@ -1,0 +1,9 @@
+# scratch from setup
+.ports_*.txt
+.release_latest.json
+.installer_*
+.DS_Store
+.esptool_*
+.venv/
+.src/
+.live/
